@@ -17,3 +17,9 @@ class ProductoInCreate(BaseModel):
     precio: int
     cantidad: int
     categoria: str
+
+class ProductoInAdd(BaseModel):
+    nombre: str
+    precio: int
+    cantidad: int
+    categoria: str

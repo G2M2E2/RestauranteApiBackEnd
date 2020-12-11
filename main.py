@@ -6,7 +6,7 @@ from db.cliente_db import update_cliente, get_cliente, create_cliente, eliminate
 from models.cliente_models import ClienteIn, ClienteOut, ClienteInCreate
 from db.inventario_db import ProductoInDB
 from db.inventario_db import update_producto, get_producto, create_producto, delete_producto, get_all_productos
-from models.inventario_models import ProductoIn, ProductoOut, ProductoInCreate
+from models.inventario_models import ProductoIn, ProductoOut, ProductoInCreate,ProductoInAdd
 from models.venta_models import VentaIn, VentaOut
 from db.venta_db import VentaInDB, get_all_ventas,save_venta,get_venta
 
@@ -26,14 +26,23 @@ async def auth_user(user_in: UsuarioIn):
         raise HTTPException(status_code=401, detail="Error en la autenticación")
     return {"Autenticado": True}
 
-@api.post("/usuario/crear/") 
-async def create_user(user_in: UsuarioIn):
-    user_in_db=update_usuario(user_in)
-    user_out = UsuarioOut(**user_in_db.dict())
-    user_new = get_usuario(user_out.username)
-    if user_new == None:
-        raise HTTPException(status_code=404,detail="El usuario no ha sido creado")
-    return {"Creado": True}
+@api.post("/producto/crear/")
+def add_producto(new_producto:ProductoInAdd):
+    cat_new=new_producto.categoria
+    productos_in_db = get_all_productos()
+    for producto in productos_in_db:
+      if cat_new==producto.categoria:
+         id_actual=producto.id
+    cat=id_actual[:2]
+    num=int(id_actual[2:])
+    if num<9:
+      id_new=cat+'0'+str(num+1)
+    else:
+      id_new=cat+str(num+1)
+    producto_ingresar = ProductoInDB(**new_producto.dict(),id=id_new)
+    producto_in_db=create_producto(producto_ingresar)
+    producto_out = ProductoOut(**producto_in_db.dict())
+    return producto_out
 
 @api.get("/cliente/consulta/{telefono}")
 async def buscar_cliente(telefono: int):
