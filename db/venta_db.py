@@ -26,8 +26,8 @@ def save_venta(ventas_in_db: VentaInDB):
     return ventas_in_db
 
 
-def get_venta(telefono: int):
-    if telefono in database_ventas:
-        return database_ventas[telefono]
+def get_venta(id: int):
+    if database_ventas[id-1] in database_ventas:
+        return database_ventas[id-1]
     else:
-        return None
+        return "No existe la factura buscada"
