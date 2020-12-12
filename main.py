@@ -98,7 +98,9 @@ async def delete_cliente(cliente_in: ClienteIn):
 
 @api.post("/producto/crear/")
 def add_producto(new_producto:ProductoInAdd):
+    ## id_actual = CA01
     cat_new=new_producto.categoria
+    id_actual=cat_new[:2]+ "00"
     productos_in_db = get_all_productos()
     for producto in productos_in_db:
         if cat_new==producto.categoria:
