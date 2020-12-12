@@ -26,23 +26,14 @@ async def auth_user(user_in: UsuarioIn):
         raise HTTPException(status_code=401, detail="Error en la autenticación")
     return {"Autenticado": True}
 
-@api.post("/producto/crear/")
-def add_producto(new_producto:ProductoInAdd):
-    cat_new=new_producto.categoria
-    productos_in_db = get_all_productos()
-    for producto in productos_in_db:
-      if cat_new==producto.categoria:
-         id_actual=producto.id
-    cat=id_actual[:2]
-    num=int(id_actual[2:])
-    if num<9:
-      id_new=cat+'0'+str(num+1)
-    else:
-      id_new=cat+str(num+1)
-    producto_ingresar = ProductoInDB(**new_producto.dict(),id=id_new)
-    producto_in_db=create_producto(producto_ingresar)
-    producto_out = ProductoOut(**producto_in_db.dict())
-    return producto_out
+@api.post("/usuario/crear/") 
+async def create_user(user_in: UsuarioIn):
+    user_in_db=update_usuario(user_in)
+    user_out = UsuarioOut(**user_in_db.dict())
+    user_new = get_usuario(user_out.username)
+    if user_new == None:
+        raise HTTPException(status_code=404,detail="El usuario no ha sido creado")
+    return {"Creado": True}
 
 @api.get("/cliente/consulta/{telefono}")
 async def buscar_cliente(telefono: int):
@@ -94,9 +85,21 @@ async def delete_cliente(cliente_in: ClienteIn):
 
 #####Inventario
 
-@api.post("/producto/crear/") 
-async def crear_producto(producto_in: ProductoInCreate):
-    producto_in_db = create_producto(producto_in)
+@api.post("/producto/crear/")
+def add_producto(new_producto:ProductoInAdd):
+    cat_new=new_producto.categoria
+    productos_in_db = get_all_productos()
+    for producto in productos_in_db:
+        if cat_new==producto.categoria:
+            id_actual=producto.id
+    cat=id_actual[:2]
+    num=int(id_actual[2:])
+    if num<9:
+        id_new=cat+'0'+str(num+1)
+    else:
+        id_new=cat+str(num+1)
+    producto_ingresar = ProductoInDB(**new_producto.dict(),id=id_new)
+    producto_in_db=create_producto(producto_ingresar)
     producto_out = ProductoOut(**producto_in_db.dict())
     return producto_out
 
@@ -159,7 +162,7 @@ async def make_venta(venta_in: VentaIn):
 
     if user_in_db == None:        
         raise HTTPException(status_code=404, detail="El usuario no tiene permisos para hacer ventas")
-     ### venta_total = acá tendría en cuenta la cantidad de productos y precio del producto para saber el precio total de acuerdo a inventario
+    ### venta_total = acá tendría en cuenta la cantidad de productos y precio del producto para saber el precio total de acuerdo a inventario
     ventas_in_db = VentaInDB(**venta_in.dict())
     ventas_in_db = save_venta(ventas_in_db)
     venta_out = VentaOut(**ventas_in_db.dict())
