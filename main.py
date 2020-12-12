@@ -96,9 +96,21 @@ async def delete_cliente(cliente_in: ClienteIn):
 
 #####Inventario
 
-@api.post("/producto/crear/") 
-async def crear_producto(producto_in: ProductoInCreate):
-    producto_in_db = create_producto(producto_in)
+@api.post("/producto/crear/")
+def add_producto(new_producto:ProductoInAdd):
+    cat_new=new_producto.categoria
+    productos_in_db = get_all_productos()
+    for producto in productos_in_db:
+        if cat_new==producto.categoria:
+            id_actual=producto.id
+    cat=id_actual[:2]
+    num=int(id_actual[2:])
+    if num<9:
+        id_new=cat+'0'+str(num+1)
+    else:
+        id_new=cat+str(num+1)
+    producto_ingresar = ProductoInDB(**new_producto.dict(),id=id_new)
+    producto_in_db=create_producto(producto_ingresar)
     producto_out = ProductoOut(**producto_in_db.dict())
     return producto_out
 
