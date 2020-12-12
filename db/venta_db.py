@@ -27,7 +27,7 @@ def save_venta(ventas_in_db: VentaInDB):
 
 
 def get_venta(id: int):
-    if database_ventas[id-1] in database_ventas:
+    if ((id-1) < len(database_ventas)):
         return database_ventas[id-1]
     else:
         return "No existe la factura buscada"

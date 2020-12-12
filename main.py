@@ -163,6 +163,7 @@ async def make_venta(venta_in: VentaIn):
         raise HTTPException(status_code=404, detail="El usuario no tiene permisos para hacer ventas")
     ### venta_total = acá tendría en cuenta la cantidad de productos y precio del producto para saber el precio total de acuerdo a inventario
     ventas_in_db = VentaInDB(**venta_in.dict())
+    ventas_in_db.venta_fecha = datetime.now()
     ventas_in_db = save_venta(ventas_in_db)
     venta_out = VentaOut(**ventas_in_db.dict())
 
