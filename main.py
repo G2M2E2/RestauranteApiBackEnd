@@ -194,37 +194,4 @@ async def buscar_venta(telefono: int):
         raise HTTPException(status_code=404, detail="no tiene ventas")
     return venta_in_db"""
 
-    #### Transacciones ####
-
-@api.get("/transaccion/lista/")
-async def lista_transacciones():
-    transacciones_in_db = get_all_transacciones()
-    transacciones_out = []
-    for transaccion in transacciones_in_db:
-        transaccion_out = TransaccionOut(**transaccion.dict())
-        transacciones_out.append(transaccion_out)
-    return transacciones_out
-
-"""
-@api.put("/transaccion/make/")
-async def make_transaccion(transaccion_in: TransaccionIn):
-    
-    producto_in_db = get_producto(transaccion_in.producto_id)
-    venta_in_db = get_venta(transaccion_in.venta_id)
-    precio_producto = get_producto(transaccion_in.producto_id.precio)
-    cant_pedido = get_producto(transaccion_in.cant_pedido)
-    
-    if producto_in_db == None:        
-        raise HTTPException(status_code=404, detail="El producto no existe")
-    if venta_in_db == None:        
-        raise HTTPException(status_code=404, detail="La venta no existe")
-
-    tran_subtotal = precio_producto*cant_pedido
-
-     ### venta_total = acá tendría en cuenta la cantidad de productos y precio del producto para saber el precio total de acuerdo a inventario
-    transacciones_in_db = TransaccionInDB(**transaccion_in.dict())
-    transacciones_in_db = save_transaccion(transacciones_in_db)
-    transaccion_out = TransaccionOut(**transacciones_in_db.dict())
-
-    return  transaccion_out
-    """
+   
