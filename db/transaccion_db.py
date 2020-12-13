@@ -3,29 +3,26 @@ from datetime import datetime
 from pydantic import BaseModel
 
 class TransaccionInDB(BaseModel):
-    transaccion_id: int
-    producto_id: str
+    transaccion_id: int = 0
+    id: str #id producto
     venta_id: int
     cant_pedido: int
-   # tran_subtotal: int
+    #tran_subtotal: int
 
-"""
-database_transacciones = {
-    "01": TransaccionInDB(**{"transaccion_id:":1,
-                        "producto_id":1,
-                        "venta_id:":1,
-                        "cant_pedido":2,
-                        "tran_subtotal": 15000
-                        }),
 
-    "02": TransaccionInDB(**{"transaccion_id:":2,
-                        "producto_id":2,
-                        "venta_id:":2,
-                        "cant_pedido":1,
-                        "tran_subtotal": 10000
-                        }),
-}
-"""
+database_transacciones =  [{
+    "transaccion_id":1,
+    "producto_id":"CA01",
+    "venta_id:":1,
+    "cant_pedido":2
+    },
+    {"transaccion_id":2,
+    "producto_id":"CA01",
+    "venta_id:":2,
+    "cant_pedido":1
+    },
+]
+
 
 def get_all_transacciones():
     return database_transacciones
@@ -43,7 +40,7 @@ def save_transaccion(transacciones_in_db: TransaccionInDB):
 
 
 def get_transaccion(id: int):
-    if ((id-1) < len(database_transacciones)):
+    if (id != 0 and (id-1) < len(database_transacciones)):
         return database_transacciones[id-1]
     else:
         return "No existe la transaccion buscada"
