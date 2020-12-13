@@ -233,3 +233,9 @@ async def make_transaccion(transaccion_in: TransaccionIn):
     transaccion_out = TransaccionOut(**transacciones_in_db.dict())
 
     return  transaccion_out
+
+
+@api.get("/transaccion/consulta/{id}")
+async def buscar_transaccion(id: int):
+    transaccion_in_db = get_transaccion(id)
+    return transaccion_in_db
