@@ -14,7 +14,6 @@ from db.transaccion_db import TransaccionInDB
 from db.transaccion_db import get_all_transacciones, save_transaccion, get_transaccion
 from models.transaccion_models import TransaccionIn, TransaccionOut
 
-
 from datetime import datetime
 
 from fastapi import FastAPI
@@ -201,7 +200,7 @@ async def buscar_venta(telefono: int):
 
     #### Transacciones ####
 
-@api.get("/transaccion/lista/")
+@api.get("/transaccion/list/")
 async def lista_transacciones():
     transacciones_in_db = get_all_transacciones()
     transacciones_out = []
@@ -210,23 +209,27 @@ async def lista_transacciones():
         transacciones_out.append(transaccion_out)
     return transacciones_out
 
-"""
+
 @api.put("/transaccion/make/")
 async def make_transaccion(transaccion_in: TransaccionIn):
     
     producto_in_db = get_producto(transaccion_in.producto_id)
     venta_in_db = get_venta(transaccion_in.venta_id)
-    precio_producto = get_producto(transaccion_in.producto_id.precio)
-    cant_pedido = get_producto(transaccion_in.cant_pedido)
+    #precio_producto = get_producto(transaccion_in.producto_id.precio)
+    #cant_pedido = get_producto(transaccion_in.cant_pedido)
     
+    #cantidad_ingresar = TransaccionInDB(**new_cantidad.dict(),cant_pedido=new_cantidad)
+    #cantidad_in_db=create_producto(cantidad_ingresar)
+
     if producto_in_db == None:        
-        raise HTTPException(status_code=404, detail="El producto no existe")
-    if venta_in_db == None:        
-        raise HTTPException(status_code=404, detail="La venta no existe")
-    tran_subtotal = precio_producto*cant_pedido
-     ### venta_total = acá tendría en cuenta la cantidad de productos y precio del producto para saber el precio total de acuerdo a inventario
+       raise HTTPException(status_code=404, detail="El producto no existe")
+    #if venta_in_db == None:        
+       # raise HTTPException(status_code=404, detail="La venta no existe")
+
+    
+   #tran_subtotal = transaccion_in.calcular_total(cant_pedido, precio_producto)
     transacciones_in_db = TransaccionInDB(**transaccion_in.dict())
     transacciones_in_db = save_transaccion(transacciones_in_db)
     transaccion_out = TransaccionOut(**transacciones_in_db.dict())
+
     return  transaccion_out
-    """
