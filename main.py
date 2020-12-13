@@ -10,7 +10,10 @@ from models.inventario_models import ProductoIn, ProductoOut, ProductoInCreate,P
 from models.venta_models import VentaIn, VentaOut
 from db.venta_db import VentaInDB, get_all_ventas,save_venta,get_venta
 
+from db.transaccion_db import TransaccionInDB
+from db.transaccion_db import get_all_transacciones, save_transaccion, get_transaccion
 from models.transaccion_models import TransaccionIn, TransaccionOut
+
 
 from datetime import datetime
 
