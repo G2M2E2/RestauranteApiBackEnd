@@ -6,7 +6,7 @@ from db.cliente_db import update_cliente, get_cliente, create_cliente, eliminate
 from models.cliente_models import ClienteIn, ClienteOut, ClienteInCreate
 from db.inventario_db import ProductoInDB
 from db.inventario_db import update_producto, get_producto, create_producto, delete_producto, get_all_productos
-from models.inventario_models import ProductoIn, ProductoOut, ProductoInCreate
+from models.inventario_models import ProductoIn, ProductoOut, ProductoInCreate,ProductoInAdd
 from models.venta_models import VentaIn, VentaOut
 from db.venta_db import VentaInDB, get_all_ventas,save_venta,get_venta
 
@@ -14,7 +14,18 @@ from datetime import datetime
 
 from fastapi import FastAPI
 from fastapi import HTTPException
+
 api = FastAPI()
+
+from fastapi.middleware.cors import CORSMiddleware
+origins = [
+"http://localhost.tiangolo.com", "https://localhost.tiangolo.com",
+"http://localhost", "http://localhost:8080","https://restaurante-front.herokuapp.com",
+]
+api.add_middleware(
+CORSMiddleware, allow_origins=origins,
+allow_credentials=True, allow_methods=["*"], allow_headers=["*"],
+)
 
 @api.post("/usuario/autenticacion/")
 async def auth_user(user_in: UsuarioIn):
@@ -85,9 +96,21 @@ async def delete_cliente(cliente_in: ClienteIn):
 
 #####Inventario
 
-@api.post("/producto/crear/") 
-async def crear_producto(producto_in: ProductoInCreate):
-    producto_in_db = create_producto(producto_in)
+@api.post("/producto/crear/")
+def add_producto(new_producto:ProductoInAdd):
+    cat_new=new_producto.categoria
+    productos_in_db = get_all_productos()
+    for producto in productos_in_db:
+        if cat_new==producto.categoria:
+            id_actual=producto.id
+    cat=id_actual[:2]
+    num=int(id_actual[2:])
+    if num<9:
+        id_new=cat+'0'+str(num+1)
+    else:
+        id_new=cat+str(num+1)
+    producto_ingresar = ProductoInDB(**new_producto.dict(),id=id_new)
+    producto_in_db=create_producto(producto_ingresar)
     producto_out = ProductoOut(**producto_in_db.dict())
     return producto_out
 
@@ -150,12 +173,19 @@ async def make_venta(venta_in: VentaIn):
 
     if user_in_db == None:        
         raise HTTPException(status_code=404, detail="El usuario no tiene permisos para hacer ventas")
-     ### venta_total = acá tendría en cuenta la cantidad de productos y precio del producto para saber el precio total de acuerdo a inventario
+    ### venta_total = acá tendría en cuenta la cantidad de productos y precio del producto para saber el precio total de acuerdo a inventario
     ventas_in_db = VentaInDB(**venta_in.dict())
+    ventas_in_db.venta_fecha = datetime.now()
     ventas_in_db = save_venta(ventas_in_db)
     venta_out = VentaOut(**ventas_in_db.dict())
 
     return  venta_out    
+
+@api.get("/venta/consulta/{id}")
+async def buscar_venta(id: int):
+    venta_in_db = get_venta(id)
+    return venta_in_db
+
 
 """@api.get("/venta/consulta/{telefono}")
 async def buscar_venta(telefono: int):

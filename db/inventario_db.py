@@ -38,9 +38,9 @@ def get_all_productos():
     return database_productos.values()
         
 def update_producto(producto_in_db: ProductoInDB):
-    database_productos[producto_in_db.telefono] = producto_in_db
+    database_productos[producto_in_db.id] = producto_in_db
     return producto_in_db
 
 def delete_producto(producto: ProductoInDB):
-    del database_productos[producto.telefono]
+    del database_productos[producto.id]
     return "El producto ha sido eliminado con éxito"
