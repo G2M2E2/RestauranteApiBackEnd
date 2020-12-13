@@ -160,14 +160,11 @@ async def delete_producto(producto_in: ProductoIn):
     producto_out = delete_producto(producto_in_db)
     return producto_out
 
+
 @api.get("/venta/list/")
 async def lista_ventas():
     ventas_in_db = get_all_ventas()
-    ventas_out = []
-    for venta in ventas_in_db:
-        venta_out = VentaOut(**venta.dict())
-        ventas_out.append(venta_out)
-    return ventas_out
+    return ventas_in_db 
 
 
 @api.put("/venta/make/")
@@ -209,29 +206,34 @@ async def lista_transacciones():
         transacciones_out.append(transaccion_out)
     return transacciones_out
 
-
+"""
 @api.put("/transaccion/make/")
 async def make_transaccion(transaccion_in: TransaccionIn):
-    
-    producto_in_db = get_producto(transaccion_in.producto_id)
-    venta_in_db = get_venta(transaccion_in.venta_id)
-    #precio_producto = get_producto(transaccion_in.producto_id.precio)
-    #cant_pedido = get_producto(transaccion_in.cant_pedido)
-    
-    #cantidad_ingresar = TransaccionInDB(**new_cantidad.dict(),cant_pedido=new_cantidad)
-    #cantidad_in_db=create_producto(cantidad_ingresar)
 
-    if producto_in_db == None:        
+    ventas_in_db = get_all_ventas()
+
+    if id == None:        
        raise HTTPException(status_code=404, detail="El producto no existe")
-    #if venta_in_db == None:        
-       # raise HTTPException(status_code=404, detail="La venta no existe")
-
     
-   #tran_subtotal = transaccion_in.calcular_total(cant_pedido, precio_producto)
-    transacciones_in_db = TransaccionInDB(**transaccion_in.dict())
-    transacciones_in_db = save_transaccion(transacciones_in_db)
-    transaccion_out = TransaccionOut(**transacciones_in_db.dict())
+    transaccion_in_db = TransaccionInDB(**transaccion_in.dict())
+    
+    transaccion_in_db = save_transaccion(transaccion_in_db)
+    transaccion_out=TransaccionOut(**transaccion_in_db.dict())
+    return  transaccion_out
+"""
 
+@api.put("/transaccion/make/")
+async def make_transaccion(new_transaccion: TransaccionIn):
+    #venta_new = new_transaccion.venta_id
+    #if id == None:        
+     #  raise HTTPException(status_code=404, detail="El producto no existe")
+    
+    #Para agregarle el id de venta automáticamente
+    ventas = get_all_ventas()
+    venta = ventas[0]
+    transaccion_ingresar = TransaccionInDB(**new_transaccion.dict(), venta_id=venta["venta_id"])
+    transaccion_in_db = save_transaccion(transaccion_ingresar)
+    transaccion_out=TransaccionOut(**transaccion_in_db.dict())
     return  transaccion_out
 
 
