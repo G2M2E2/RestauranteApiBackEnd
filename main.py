@@ -226,12 +226,14 @@ async def make_transaccion(transaccion_in: TransaccionIn):
 async def make_transaccion(new_transaccion: TransaccionIn):
     #venta_new = new_transaccion.venta_id
     #if id == None:        
-     #  raise HTTPException(status_code=404, detail="El producto no existe")
+    #  raise HTTPException(status_code=404, detail="El producto no existe")
     
     #Para agregarle el id de venta automáticamente
     ventas = get_all_ventas()
     venta = ventas[0]
+    
     transaccion_ingresar = TransaccionInDB(**new_transaccion.dict(), venta_id=venta["venta_id"])
+    #transaccion_ingresar = TransaccionInDB(**new_transaccion.dict(), venta_id=new_transaccion.transaccion_id)
     transaccion_in_db = save_transaccion(transaccion_ingresar)
     transaccion_out=TransaccionOut(**transaccion_in_db.dict())
     return  transaccion_out
