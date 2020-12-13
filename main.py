@@ -198,6 +198,8 @@ async def buscar_venta(telefono: int):
         raise HTTPException(status_code=404, detail="no tiene ventas")
     return venta_in_db"""
 
+
+"""
 #### Transacciones ####
 
 @api.get("/transaccion/list/")
@@ -209,7 +211,7 @@ async def lista_transacciones():
         transacciones_out.append(transaccion_out)
     return transacciones_out
 
-"""
+
 @api.put("/transaccion/make/")
 async def make_transaccion(transaccion_in: TransaccionIn):
     
