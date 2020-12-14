@@ -200,11 +200,8 @@ async def buscar_venta(telefono: int):
 @api.get("/transaccion/list/")
 async def lista_transacciones():
     transacciones_in_db = get_all_transacciones()
-    transacciones_out = []
-    for transaccion in transacciones_in_db:
-        transaccion_out = TransaccionOut(**transaccion.dict())
-        transacciones_out.append(transaccion_out)
-    return transacciones_out
+    return transacciones_in_db
+
 
 """
 @api.put("/transaccion/make/")
