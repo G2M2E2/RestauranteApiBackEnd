@@ -28,7 +28,7 @@ def get_all_transacciones():
     return database_transacciones
 
 
-database_transacciones = []
+#database_transacciones = []
 generator_tr = {"id":0}
 
 
