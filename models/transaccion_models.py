@@ -11,6 +11,4 @@ class TransaccionOut(BaseModel):
     id: str #producto id
     venta_id: int
     cant_pedido: int
-    #tran_subtotal: int
-
-    
+    tran_subtotal: int
