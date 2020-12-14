@@ -5,7 +5,7 @@ from db.cliente_db import ClienteInDB
 from db.cliente_db import update_cliente, get_cliente, create_cliente, eliminate_cliente, get_all_clientes
 from models.cliente_models import ClienteIn, ClienteOut, ClienteInCreate
 from db.inventario_db import ProductoInDB
-from db.inventario_db import update_producto, get_producto, create_producto, delete_producto, get_all_productos
+from db.inventario_db import update_producto, get_producto, create_producto, delete_producto, get_all_productos, get_all_productos_dict
 from models.inventario_models import ProductoIn, ProductoOut, ProductoInCreate,ProductoInAdd
 from models.venta_models import VentaIn, VentaOut
 from db.venta_db import VentaInDB, get_all_ventas,save_venta,get_venta
@@ -230,9 +230,16 @@ async def make_transaccion(new_transaccion: TransaccionIn):
     
     #Para agregarle el id de venta automáticamente
     ventas = get_all_ventas()
-    venta = ventas[0]
-    
-    transaccion_ingresar = TransaccionInDB(**new_transaccion.dict(), venta_id=venta["venta_id"])
+    #Elige el id de la última venta
+    venta = ventas[len(ventas)-1]
+
+    productos = get_all_productos_dict()
+    producto = productos[len(productos)-1]
+    precio = producto["precio"]
+   
+    subtotal = new_transaccion.cant_pedido * precio
+
+    transaccion_ingresar = TransaccionInDB(**new_transaccion.dict(), venta_id=venta["venta_id"],tran_subtotal=subtotal )
     #transaccion_ingresar = TransaccionInDB(**new_transaccion.dict(), venta_id=new_transaccion.transaccion_id)
     transaccion_in_db = save_transaccion(transaccion_ingresar)
     transaccion_out=TransaccionOut(**transaccion_in_db.dict())
