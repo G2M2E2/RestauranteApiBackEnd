@@ -7,7 +7,7 @@ class TransaccionInDB(BaseModel):
     id: str #id producto
     venta_id: int
     cant_pedido: int
-    #tran_subtotal: int
+    tran_subtotal: int
 
 
 database_transacciones =  [{
