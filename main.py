@@ -153,7 +153,7 @@ async def delete_producto(producto_in: ProductoIn):
     if producto_in_db == None:
         raise HTTPException(status_code=404,
                             detail="El producto no existe")
-    producto_out = delete_producto(producto_in_db)
+    producto_out = eliminate_producto(producto_in_db)
     return producto_out
 
 @api.get("/venta/list/")
